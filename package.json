@@ -29,7 +29,7 @@
     "mongoose": "^7.3.0",
     "node-fetch": "^2.6.11",
     "nodemon": "^2.0.22",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",

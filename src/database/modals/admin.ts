@@ -16,6 +16,10 @@ let ADMIN_SCHEMA = new mongoose.Schema(
       type: String,
       required: true,
     },
+    createdAt: {
+      type: Date,
+      default: Date.now  // Default value is the current date/time
+    }
   },
   {
     collection: COLLECTION,

@@ -1,6 +1,8 @@
+import { Create_Category, find_category_by_name } from "../database/modals/Categories";
 import { find_admin_by_email } from "../database/modals/admin";
 import { verify_admin_password } from "../encryptions/password_encrypt";
 import { Create_Admin_Token } from "../functions/jwtAuths";
+import crypto from "crypto";
 
 export const admin_login = async (req: any, resp: any) => {
     try {
@@ -40,3 +42,46 @@ export const admin_login = async (req: any, resp: any) => {
       resp.status(400).send({ success: false, message: err.message });
     }
   };
+
+
+
+
+
+
+
+
+
+  export const create_category = async (req:any, resp:any) => {
+  try {
+    const { name, image, status } = req.body;
+
+    if (!name) {
+      return resp.status(422).send({ success: false, message: "Category name not entered" });
+    }
+
+    if (!image) {
+      return resp.status(422).send({ success: false, message: "Category image not entered" });
+    }
+
+    if (!status) {
+      return resp.status(422).send({ success: false, message: "Category status not entered" });
+    }
+
+    const existingCategory = await find_category_by_name(name);
+
+    if (existingCategory) {
+      return resp.status(409).send({ success: false, message: "Category already exists" });
+    }
+
+    const id = crypto.randomUUID();  // Generate UUID for the _id field
+    console.log("id:", id);
+    const newCategory = await Create_Category({id, name, image, status });
+
+    resp.send({
+      success: true,
+      category: newCategory,
+    });
+  } catch (err:any) {
+    resp.status(400).send({ success: false, message: err.message });
+  }
+};
