@@ -11,9 +11,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(cors({
-  origin: '*'
+  origin: 'https://yaad-e-madina-admin.web.app' // Replace with your frontend origin
 }));
-
 app.use(express.json());
 app.use(bodyParser.urlencoded({ limit: `50mb`, extended: true }));
 
@@ -28,7 +27,7 @@ app.post("/api/owner/createAdmin", authticate_owner, create_admin);
 app.post("/api/admin/login", admin_login);
 
 // Add Category
-// app.post("/api/createCategory",authticate_admin ,create_category);
+app.post("/api/createCategory",authticate_admin ,create_category);
 
 
 
