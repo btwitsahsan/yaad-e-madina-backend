@@ -1,5 +1,5 @@
-import { Create_Category, find_category_by_name } from "../database/modals/Categories";
 import { find_admin_by_email } from "../database/modals/admin";
+import { Create_Category, find_category_by_name, get_all_categories_from_db } from "../database/modals/categories";
 import { verify_admin_password } from "../encryptions/password_encrypt";
 import { Create_Admin_Token } from "../functions/jwtAuths";
 import crypto from "crypto";
@@ -73,8 +73,7 @@ export const admin_login = async (req: any, resp: any) => {
       return resp.status(409).send({ success: false, message: "Category already exists" });
     }
 
-    const id = crypto.randomUUID();  // Generate UUID for the _id field
-    console.log("id:", id);
+    const id = await crypto.randomUUID();
     const newCategory = await Create_Category({id, name, image, status });
 
     resp.send({
@@ -83,5 +82,18 @@ export const admin_login = async (req: any, resp: any) => {
     });
   } catch (err:any) {
     resp.status(400).send({ success: false, message: err.message });
+  }
+};
+
+
+
+
+
+export const get_all_categories = async (req: any, res: any) => {
+  try {
+    const categories = await get_all_categories_from_db();
+    res.status(200).send({ success: true, categories });
+  } catch (err: any) {
+    res.status(500).send({ success: false, message: err.message });
   }
 };

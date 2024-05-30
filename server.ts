@@ -5,7 +5,7 @@ import bodyParser from "body-parser";
 import { Connect_DB } from './src/database/mongodb';
 import { authticate_admin, authticate_owner } from './src/middlewares/middlewares';
 import { create_admin } from './src/requests/owner_requests';
-import { admin_login, create_category } from './src/requests/admin_requests';
+import { admin_login, create_category, get_all_categories } from './src/requests/admin_requests';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -26,7 +26,8 @@ app.post("/api/admin/login", admin_login);
 
 // Add Category
 app.post("/api/createCategory",authticate_admin ,create_category);
-
+// Get All Categories
+app.post("/api/getAllCategories", authticate_admin, get_all_categories);
 
 
 Connect_DB().then(() => {

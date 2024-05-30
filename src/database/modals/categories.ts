@@ -41,3 +41,7 @@ export const Create_Category = async (categoryData:any) => {
   const category = new Category(categoryData);
   return await category.save();
 };
+
+export const get_all_categories_from_db = async () => {
+  return await Category.find({});
+};
