@@ -43,5 +43,9 @@ export const Create_Category = async (categoryData:any) => {
 };
 
 export const get_all_categories_from_db = async () => {
-  return await Category.find({});
+  return await Category.find({}).select("-_id");
+};
+
+export const deleteCategory = async (id:any) => {
+   await Category.findOneAndDelete({ id: id });
 };
