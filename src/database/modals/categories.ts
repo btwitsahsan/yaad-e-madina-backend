@@ -46,6 +46,14 @@ export const get_all_categories_from_db = async () => {
   return await Category.find({}).select("-_id");
 };
 
+export const getCategoryById = async (id:any) => {
+  return await Category.findOne({ id: id }).select("-_id");
+};
+
+export const updateCategory = async (id:any, updatedData:any) => {
+  return await Category.findOneAndUpdate({ id }, updatedData, { new: true });
+};
+
 export const deleteCategory = async (id:any) => {
    await Category.findOneAndDelete({ id: id });
 };

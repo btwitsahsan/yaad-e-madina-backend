@@ -41,6 +41,14 @@ export const get_all_naat_khawans_from_db = async () => {
   return await NaatKhawan.find({}).select("-_id");
 };
 
+export const getNaatKhawanById = async (id:any) => {
+  return await NaatKhawan.findOne({ id }).select("-_id");
+};
+
+export const updateNaatKhawan = async (id:any, updatedData:any) => {
+  return await NaatKhawan.findOneAndUpdate({ id }, updatedData, { new: true });
+};
+
 export const deleteNaatKhawan = async (id:any) => {
   await NaatKhawan.findOneAndDelete({ id: id });
 };
