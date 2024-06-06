@@ -11,6 +11,7 @@ import { create_naat_khawan, delete_naat_khawan, get_all_naat_khawans, get_naat_
 import { create_album, delete_album, get_album_by_id, get_all_album, update_album } from './src/requests/album_requests';
 import { create_audio, delete_audio, get_all_audios, get_audio_by_id, update_audio } from './src/requests/audio_requests';
 import { create_playlist, delete_playlist, get_all_playlists, get_playlist_by_id, update_playlist } from './src/requests/playlist_requests';
+import { dashboard } from './src/requests/dashboard_requests';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -29,6 +30,8 @@ app.post("/api/owner/createAdmin", authticate_owner, create_admin);
 // ADMIN END-POINTs
 app.post("/api/admin/login", admin_login);
 
+
+app.post("/api/dashboard", authticate_admin, dashboard);
 
 // Add Category
 app.post("/api/createCategory",authticate_admin ,create_category);
