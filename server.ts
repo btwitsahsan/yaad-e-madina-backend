@@ -118,28 +118,12 @@ app.post('/api/deleteSubscriptionPlan/:id', authenticate_admin, delete_subscript
 
 
 // test api's
-// API endpoint for creating Album
-app.post("/testApi/createAlbum", create_album);
 // API endpoint for getting all Album
 app.post("/testApi/getAllAlbum", get_all_albums);
-// API endpoint for get Album by id
-app.post("/testApi/getAlbumById/:id", get_album_by_id);
-// API endpoint for update album
-app.post("/testApi/updateAlbum/:id", update_album);
-// API endpoint for delete Album
-app.post("/testApi/deleteAlbum/:id", delete_album);
 
 
-// API endpoint for creating Audio
-app.post("/testApi/createAudio", create_audio);
 // API endpoint for getting all Audio
 app.post("/testApi/getAllAudio", get_all_audios);
-// API endpoint for get Album by id
-app.post("/testApi/getAudioById/:id", get_audio_by_id);
-// API endpoint for update album
-app.post("/testApi/updateAudio/:id", update_audio);
-// API endpoint for delete Audio
-app.post("/testApi/deleteAudio/:id", delete_audio);
 
 
 
