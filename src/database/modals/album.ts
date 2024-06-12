@@ -23,9 +23,10 @@ const ALBUM_SCHEMA = new mongoose.Schema({
     required: true,
     enum: ['active', 'inactive'],
   },
-  naatKhawans: [{
-    type: String,
-  }],
+  naatKhawan: {
+    id: String,
+    name: String,
+  },
   createdAt: {
     type: Date,
     default: Date.now,  // Default value is the current date/time
@@ -36,11 +37,11 @@ const ALBUM_SCHEMA = new mongoose.Schema({
 
 const Album = mongoose.model(COLLECTION, ALBUM_SCHEMA);
 
-export const findAlbumByName = async (name:any) => {
+export const findAlbumByName = async (name: any) => {
   return await Album.findOne({ name });
 };
 
-export const createAlbum = async (albumData:any) => {
+export const createAlbum = async (albumData: any) => {
   // console.log(albumData);
   const album = new Album(albumData);
   return await album.save();
@@ -50,14 +51,16 @@ export const getAllAlbumsFromDB = async () => {
   return await Album.find({}).select("-_id");
 };
 
-export const getAlbumById = async (id:any) => {
+export const getAlbumById = async (id: any) => {
   return await Album.findOne({ id }).select('-_id');
 };
 
-export const updateAlbum = async (id:any, updatedData:any) => {
+export const updateAlbum = async (id: any, updatedData: any) => {
   return await Album.findOneAndUpdate({ id }, updatedData, { new: true });
 };
 
-export const deleteAlbum = async (id:any) => {
+export const deleteAlbum = async (id: any) => {
   await Album.findOneAndDelete({ id });
 };
+
+

@@ -28,7 +28,7 @@ export const authticate_owner = async (req: any, resp: any, next: any) => {
   
 
 
-  export const authticate_admin = async (req: any, resp: any, next: any) => {
+  export const authenticate_admin = async (req: any, resp: any, next: any) => {
     try {
       const token = req.headers['authorization'];
   

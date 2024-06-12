@@ -14,24 +14,24 @@ const AUDIO_SCHEMA = new mongoose.Schema({
     type: String,
     required: true,
   },
-  categories: [{
+  category: {
     id: String,
     name: String
-  }],
-  albums: [{
+  },
+  album: {
     id: String,
     name: String
-  }],
+  },
   status: {
     type: String,
     required: true,
     enum: ['active', 'inactive'],
   },
   
-  naatKhawans: [{
+  naatKhawan: {
     id: String,
     name: String
-  }],
+  },
   audioFile: {
     type: String,
     required: true,
@@ -61,7 +61,7 @@ export const findAudioByName = async (name: any) => {
 };
 
 export const createAudio = async (audioData: any) => {
-  // console.log(audioData);
+  console.log(audioData);
   const audio = new Audio(audioData);
   return await audio.save();
 };

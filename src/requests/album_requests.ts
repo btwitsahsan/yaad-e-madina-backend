@@ -1,26 +1,12 @@
-import { createAlbum, deleteAlbum, findAlbumByName, getAlbumById, getAllAlbumsFromDB, updateAlbum } from "../database/modals/album";
-import mongoose from 'mongoose';
 import crypto from "crypto";
-
+import { createAlbum, deleteAlbum, findAlbumByName, getAlbumById, getAllAlbumsFromDB, updateAlbum } from "../database/modals/album";
 
 
 export const create_album = async (req: any, resp: any) => {
   try {
-    console.log(req.body);
-    const { name, image, status, naatKhawans } = req.body;
-
-    if (!name) {
-      resp.status(422).send({ success: false, message: "Album name not entered" });
-      return;
-    }
-
-    if (!image) {
-      resp.status(422).send({ success: false, message: "Album image not entered" });
-      return;
-    }
-
-    if (!status) {
-      resp.status(422).send({ success: false, message: "Album status not entered" });
+    const { name, image, status, naatKhawan } = req.body;
+    if (!name || !image || !status || !naatKhawan) {
+      resp.status(422).send({ success: false, message: "Required fields are missing" });
       return;
     }
 
@@ -31,6 +17,10 @@ export const create_album = async (req: any, resp: any) => {
       return;
     }
 
+    // Extracting ID and name from naatKhawan object
+    const naatKhawanData = { id: naatKhawan.value, name: naatKhawan.label };
+    
+
     // Create new album
     const id = crypto.randomUUID();
     const newAlbum = await createAlbum({
@@ -38,7 +28,7 @@ export const create_album = async (req: any, resp: any) => {
       name,
       image,
       status,
-      naatKhawans,
+      naatKhawan: naatKhawanData,
     });
 
     resp.send({
@@ -50,35 +40,46 @@ export const create_album = async (req: any, resp: any) => {
   }
 };
   
+
+
+
   
-  export const get_all_album = async (req: any, resp: any) => {
+export const get_all_albums = async (req: any, resp: any) => {
+  try {
+
+    const albums = await getAllAlbumsFromDB();
+
+    resp.send({
+      success: true,
+      albums,
+    });
+  } catch (err: any) {
+    resp.status(400).send({ success: false, message: err.message });
+  }
+};
+
+  
+  
+  export const get_album_by_id = async (req: any, resp: any) => {
     try {
-      const albums = await getAllAlbumsFromDB();
+      const { id } = req.params;
+  
+      // Check if album exists
+      const album = await getAlbumById(id);
+      if (!album) {
+        resp.status(404).send({ success: false, message: "Album not found" });
+        return;
+      }
+  
       resp.send({
         success: true,
-        albums: albums,
+        album,
       });
     } catch (err: any) {
       resp.status(400).send({ success: false, message: err.message });
     }
   };
   
-  
-
-  export const get_album_by_id = async (req: any, res: any) => {
-    try {
-      const { id } = req.params;
-      const album = await getAlbumById(id);
-  
-      if (!album) {
-        return res.status(404).send({ success: false, message: "Album not found" });
-      }
-  
-      res.status(200).send({ success: true, album });
-    } catch (err: any) {
-      res.status(500).send({ success: false, message: err.message });
-    }
-  };
   
   
   
@@ -87,25 +88,30 @@ export const create_album = async (req: any, resp: any) => {
   export const update_album = async (req: any, resp: any) => {
     try {
       const { id } = req.params;
-      const { name, image, status, naatKhawans } = req.body;
+      const { name, image, status, naatKhawan } = req.body;
   
-      if (!name && !image && !status && !naatKhawans) {
-        return resp.status(422).send({ success: false, message: "No update data provided" });
+      if (!id || !name || !image || !status || !naatKhawan) {
+        resp.status(422).send({ success: false, message: "Required fields are missing" });
+        return;
       }
   
-      const album = await getAlbumById(id);
-  
-      if (!album) {
-        return resp.status(404).send({ success: false, message: "Album not found" });
+      // Check if album exists
+      const existingAlbum = await getAlbumById(id);
+      if (!existingAlbum) {
+        resp.status(404).send({ success: false, message: "Album not found" });
+        return;
       }
   
-      const updatedData: any = {};
-      if (name) updatedData.name = name;
-      if (image) updatedData.image = image;
-      if (status) updatedData.status = status;
-      if (naatKhawans) updatedData.naatKhawans = naatKhawans
+      // Extracting ID and name from naatKhawan object
+      const naatKhawanData = { id: naatKhawan.value, name: naatKhawan.label };
   
-      const updatedAlbum = await updateAlbum(id, updatedData);
+      // Update album
+      const updatedAlbum = await updateAlbum(id, {
+        name,
+        image,
+        status,
+        naatKhawan: naatKhawanData,
+      });
   
       resp.send({
         success: true,
@@ -115,6 +121,7 @@ export const create_album = async (req: any, resp: any) => {
       resp.status(400).send({ success: false, message: err.message });
     }
   };
+  
 
 
 
@@ -123,12 +130,14 @@ export const create_album = async (req: any, resp: any) => {
     try {
       const { id } = req.params;
   
-      const album = await getAlbumById(id);
-  
-      if (!album) {
-        return resp.status(404).send({ success: false, message: "Album not found" });
+      // Check if album exists
+      const existingAlbum = await getAlbumById(id);
+      if (!existingAlbum) {
+        resp.status(404).send({ success: false, message: "Album not found" });
+        return;
       }
   
+      // Delete album
       await deleteAlbum(id);
   
       resp.send({
@@ -139,3 +148,4 @@ export const create_album = async (req: any, resp: any) => {
       resp.status(400).send({ success: false, message: err.message });
     }
   };
+  
